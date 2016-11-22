@@ -158,6 +158,8 @@ class BCD(DataFieldType):
 
         bcd_sign is the sign/status matrix (SSM) code representing the sign of
         the decoded value.
+
+        resolution is the scale of each BCD digit.
         """
         # Compute the sign.
         sign = -1 if bcd_sign == cls.MINUS else 1
@@ -232,6 +234,8 @@ class BNR(DataFieldType):
 
         bnr_value is encoded data in the signed, two's complement binary number
         form.
+
+        bnr_bit_length is the number of bits that represent bnr_value.
 
         resolution is the scaling factor used when applying binary scaling to
         bnr_value.
