@@ -85,6 +85,11 @@ class DataFieldType(metaclass=ABCMeta):
         _ = kwargs
 
 
+# Named tuple for data fields.
+DataField = NamedTuple("DataField", (("lsb", int),
+                                     ("msb", int),
+                                     ("data", DataFieldType)))
+# Type alias for data field values.
 DataFieldValue = Union[int, float, Decimal]
 
 
@@ -477,9 +482,3 @@ class Word(object):
         parity_value = ((count + self._parity_type) % 2) << parity_bit_offset
         # Update the parity bit.
         self._value = (self._value & parity_mask) | parity_value
-
-
-# Named tuple for data fields.
-DataField = NamedTuple("DataField", (("lsb", int),
-                                     ("msb", int),
-                                     ("data", DataFieldType)))
