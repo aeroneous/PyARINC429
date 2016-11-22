@@ -95,8 +95,8 @@ class BCD(DataFieldType):
     MINUS = SOUTH = WEST = LEFT = FROM = BELOW = 3
 
     def __init__(self,
-                 value: Union[int, float, str, Decimal] = 0,
-                 resolution: Union[int, float, str, Decimal] = 1) -> None:
+                 value: Union[int, float, Decimal] = 0,
+                 resolution: Union[int, float, Decimal] = 1) -> None:
         """
         Form a BCD datum based on value.
 
@@ -150,7 +150,7 @@ class BCD(DataFieldType):
     def decode(cls,
                bcd_value: int,
                bcd_sign: int = PLUS,
-               resolution: Union[int, float, str, Decimal] = 1) -> "BCD":
+               resolution: Union[int, float, Decimal] = 1) -> "BCD":
         """
         Return an instance of BCD based on encoded data.
 
@@ -183,8 +183,8 @@ class BNR(DataFieldType):
     NORMAL_OPERATION = 3
 
     def __init__(self,
-                 value: Union[int, float, str, Decimal] = 0,
-                 resolution: Union[int, float, str, Decimal] = 1) -> None:
+                 value: Union[int, float, Decimal] = 0,
+                 resolution: Union[int, float, Decimal] = 1) -> None:
         """
         Form a BNR datum based on value. The BNR value will be adjusted to the
         lesser multiple of resolution in the case that value is not already a
@@ -228,7 +228,7 @@ class BNR(DataFieldType):
     def decode(cls,
                bnr_value: int,
                bnr_bit_length: int,
-               resolution: Union[int, float, str, Decimal] = 1) -> "BNR":
+               resolution: Union[int, float, Decimal] = 1) -> "BNR":
         """
         Return an instance of BNR based on encoded data.
 
@@ -329,7 +329,7 @@ class Word(object):
             self.set_bit_field(*LABEL_BITS, LABELS[value])
         except KeyError:
             raise ValueError("Label must be >= {:#o} and <= {:#o}: "
-                             "{}".format(min(LABELS), max(LABELS), value))
+                             "{:#o}".format(min(LABELS), max(LABELS), value))
 
     @property
     def sdi(self) -> int:
