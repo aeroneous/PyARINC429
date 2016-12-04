@@ -1,4 +1,7 @@
-"""Provides classes and data used for organizing and interpreting ARINC 429 data."""
+"""
+Provides classes and data used for organizing and interpreting ARINC 429
+data.
+"""
 
 from abc import ABCMeta, abstractmethod
 from decimal import Decimal
@@ -59,17 +62,23 @@ class DataFieldType(metaclass=ABCMeta):
         return (isinstance(other, self.__class__) and
                 self.__dict__ == other.__dict__)
 
-    # The __lt__, __gt__, and __and__ methods emulate numeric operations that
-    # are used by Word.set_bit_field.
+    # The __lt__, __gt__, and __and__ methods emulate numeric operations
+    # that are used by Word.set_bit_field.
 
     def __lt__(self, other) -> bool:
-        return self._value < other if isinstance(other, int) else NotImplemented
+        return (self._value < other
+                if isinstance(other, int)
+                else NotImplemented)
 
     def __gt__(self, other) -> bool:
-        return self._value > other if isinstance(other, int) else NotImplemented
+        return (self._value > other
+                if isinstance(other, int)
+                else NotImplemented)
 
     def __and__(self, other) -> bool:
-        return self._value & other if isinstance(other, int) else NotImplemented
+        return (self._value & other
+                if isinstance(other, int)
+                else NotImplemented)
 
     def __int__(self) -> int:
         return self._value
@@ -208,8 +217,8 @@ class BNR(DataFieldType):
         resolution = Decimal(str(resolution))
         bnr_value = value // resolution
         super().__init__(bnr_value)
-        # Adjust the value to a multiple of the bit scale, and retain the result
-        # as the decoded value.
+        # Adjust the value to a multiple of the bit scale, and retain the
+        # result as the decoded value.
         self._decoded_value = bnr_value * resolution
         # Retain the resolution.
         self._resolution = resolution
@@ -425,8 +434,8 @@ class Word(object):
         lsb is the least significant bit (LSB) of a bit field, and is relative
         to the LSB of the containing ARINC 429 word.
 
-        msb is the most significant bit (MSB) of a bit field, and is relative to
-        the LSB of the containing ARINC 429 word.
+        msb is the most significant bit (MSB) of a bit field, and is relative
+        to the LSB of the containing ARINC 429 word.
         """
         # Validate the range of the bit field.
         self._validate_bit_field_range(lsb, msb)
@@ -451,8 +460,8 @@ class Word(object):
         lsb is the least significant bit (LSB) of a bit field, and is relative
         to the LSB of the containing ARINC 429 word.
 
-        msb is the most significant bit (MSB) of a bit field, and is relative to
-        the LSB of the containing ARINC 429 word.
+        msb is the most significant bit (MSB) of a bit field, and is relative
+        to the LSB of the containing ARINC 429 word.
 
         value is applied to the bit field specified by lsb and msb.
         """
@@ -474,8 +483,8 @@ class Word(object):
         bit_field_value = (value & value_mask) << bit_field_offset
         # Update the bit field.
         self._value = (self._value & word_mask) | bit_field_value
-        # Count the number of 1-bits in the ARINC 429 word, excluding the parity
-        # bit.
+        # Count the number of 1-bits in the ARINC 429 word, excluding the
+        # parity bit.
         count = format(self, "032b").count("1", 1)
         # Compute the parity bit value respective of the parity setting.
         parity_value = ((count + self._parity_type) % 2) << parity_bit_offset
