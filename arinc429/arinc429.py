@@ -1,6 +1,4 @@
-"""
-Provides classes and data used for organizing and interpreting ARINC 429 data.
-"""
+"""Provides classes and data used for organizing and interpreting ARINC 429 data."""
 
 from abc import ABCMeta, abstractmethod
 from decimal import Decimal
@@ -83,6 +81,8 @@ class DataFieldType(metaclass=ABCMeta):
     @abstractmethod
     def decode(cls, **kwargs) -> "DataFieldType":
         _ = kwargs
+
+        return DataFieldType()
 
 
 # Named tuple for data fields.
@@ -250,10 +250,9 @@ class BNR(DataFieldType):
         """
         # Extract the value of the sign bit.
         sign = (bnr_value >> (bnr_bit_length - 1)) & 1
-        # Set the sign of the Python number.
-        if sign == cls.MINUS:
-            # Extend the sign.
-            bnr_value -= 1 << bnr_bit_length
+        # Set the sign of the Python number. This performs sign extension when
+        # the sign is negative.
+        bnr_value -= sign << bnr_bit_length
         # Decode the BNR value.
         value = bnr_value * resolution
         # Return a BNR instance.
