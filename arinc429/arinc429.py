@@ -7,7 +7,13 @@ from abc import ABCMeta, abstractmethod
 from decimal import Decimal
 from typing import NamedTuple, Union
 
-BitFieldRange = NamedTuple("BitFieldRange", (("lsb", int), ("msb", int)))
+
+class BitFieldRange(NamedTuple):
+    """A named and typed tuple for specifying the range of a bit field."""
+
+    lsb: int
+    msb: int
+
 # Least significant bit. The indexing of ARINC 429 bits is 1-based.
 LSB = 1
 # Most significant bit
@@ -63,15 +69,25 @@ class DataFieldType(metaclass=ABCMeta):
                 self.__dict__ == other.__dict__)
 
     # The __lt__, __gt__, and __and__ methods emulate numeric operations
-    # that are used by Word.set_bit_field.
+    # that are used by the Word.set_bit_field method.
 
     def __lt__(self, other) -> bool:
         return (self._value < other
                 if isinstance(other, int)
                 else NotImplemented)
 
+    def __le__(self, other) -> bool:
+        return (self._value <= other
+                if isinstance(other, int)
+                else NotImplemented)
+
     def __gt__(self, other) -> bool:
         return (self._value > other
+                if isinstance(other, int)
+                else NotImplemented)
+
+    def __ge__(self, other) -> bool:
+        return (self._value >= other
                 if isinstance(other, int)
                 else NotImplemented)
 
@@ -90,14 +106,22 @@ class DataFieldType(metaclass=ABCMeta):
     @abstractmethod
     def decode(cls, **kwargs) -> "DataFieldType":
         _ = kwargs
-
         return DataFieldType()
 
 
-# Named tuple for data fields.
-DataField = NamedTuple("DataField", (("lsb", int),
-                                     ("msb", int),
-                                     ("data", DataFieldType)))
+class DataField(NamedTuple):
+    """
+    A typed, named tuple for specifying data fields.
+
+    This kind of tuple can be unpacked to provide arguments for the
+    Word.set_bit_field method.
+    """
+
+    lsb: int
+    msb: int
+    data: Union[int, DataFieldType]
+
+
 # Type alias for data field values.
 DataFieldValue = Union[int, float, Decimal]
 
@@ -166,12 +190,12 @@ class BCD(DataFieldType):
     @classmethod
     def decode(cls,
                bcd_value: int,
-               bcd_sign: int = PLUS,
+               bcd_sign: int,
                resolution: DataFieldValue = 1) -> "BCD":
         """
         Return an instance of BCD based on encoded data.
 
-        bcd_value is a binary-coded decimal (BCD) encoded whole number.
+        bcd_value is a binary-coded decimal (BCD) encoded number.
 
         bcd_sign is the sign/status matrix (SSM) code representing the sign of
         the decoded value.
@@ -395,7 +419,8 @@ class Word(object):
             # Refresh the parity bit.
             self.set_bit_field(LSB, MSB, self._value)
         else:
-            raise ValueError("Invalid parity setting: {}".format(value))
+            raise ValueError("Parity setting must be {cls.EVEN_PARITY} or "
+                             "{cls.ODD_PARITY}: {0}".format(value, cls=self))
 
     @staticmethod
     def _validate_bit_field_range(lsb: int, msb: int) -> None:
@@ -422,7 +447,7 @@ class Word(object):
             min_value = ~(max_value >> 1)
             # Verify that the number of significant bits of the value is not
             # greater than the bit length of the value.
-            if value < min_value or value > max_value:
+            if not (min_value <= value <= max_value):
                 raise FieldOverflowError(value, bit_length)
         else:
             raise ValueError("Bit length must be > 0")
