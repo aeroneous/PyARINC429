@@ -14,6 +14,7 @@ class BitFieldRange(NamedTuple):
     lsb: int
     msb: int
 
+
 # Least significant bit. The indexing of ARINC 429 bits is 1-based.
 LSB = 1
 # Most significant bit
