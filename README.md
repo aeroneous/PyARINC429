@@ -27,6 +27,8 @@ Label=0o1, SDI=0, Data=0x1215, SSM=0, Parity=0
 
 ```
 >>> word = arinc429.Word()
+>>> w.label = 0o400
+ValueError: Label must be >= 0o0 and <= 0o377: 0o400
 >>> word.label = 0o2
 >>> encoded_pitch = arinc429.BNR(90, 0.043945313)
 >>> encoded_pitch
@@ -51,15 +53,6 @@ BNR(value=89.956055711, resolution=0.043945313)
 >>> encoded_mode = arinc429.Discrete(6)
 >>> bit_field = arinc429.DataField(11, 12, encoded_mode)
 >>> word.set_bit_field(*bit_field)
-Traceback (most recent call last):
-  File "/Users/jasonhodge/Anaconda3/lib/python3.6/site-packages/IPython/core/interactiveshell.py", line 2881, in run_code
-    exec(code_obj, self.user_global_ns, self.user_ns)
-  File "<ipython-input-17-1739be463aa8>", line 1, in <module>
-    word.set_bit_field(*bit_field)
-  File "/Users/jasonhodge/Projects/PyARINC429/arinc429/arinc429.py", line 499, in set_bit_field
-    self._validate_bit_length(bit_field_length, value)
-  File "/Users/jasonhodge/Projects/PyARINC429/arinc429/arinc429.py", line 452, in _validate_bit_length
-    raise FieldOverflowError(value, bit_length)
 arinc429.arinc429.FieldOverflowError: 0x6 overflows 2 bit(s)
 >>> bit_field = arinc429.DataField(11, 13, encoded_mode)
 >>> bit_field
