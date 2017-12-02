@@ -2,7 +2,7 @@
 
 PyARINC429 provides object types used for organizing and interpreting digital information as specified by the ARINC 429 data protocol. It supports basic encoding, decoding, and validation for Binary Coded Decimal (BCD), Binary Number Representation (BNR), and discrete word types. It also supports mixed BCD/discrete and BNR/discrete data.
 
-PyARINC429 was developed for Python 3.
+PyARINC429 was developed using Python 3.5.
 
 ## Example Usage
 
