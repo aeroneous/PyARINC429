@@ -27,7 +27,7 @@ Label=0o1, SDI=0, Data=0x1215, SSM=0, Parity=0
 
 ```
 >>> word = arinc429.Word()
->>> w.label = 0o400
+>>> word.label = 0o400
 ValueError: Label must be >= 0o0 and <= 0o377: 0o400
 >>> word.label = 0o2
 >>> encoded_pitch = arinc429.BNR(90, 0.043945313)
