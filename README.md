@@ -8,7 +8,7 @@ PyARINC429 was developed using Python 3.5.
 
 ### BCD
 
-```
+```python
 >>> word = arinc429.Word()
 >>> word.label = 0o1
 >>> encoded_vhf1_freq = arinc429.BCD(121.5, resolution=0.1)
@@ -25,7 +25,7 @@ Label=0o1, SDI=0, Data=0x1215, SSM=0, Parity=0
 
 ### BNR
 
-```
+```python
 >>> word = arinc429.Word()
 >>> word.label = 0o400
 ValueError: Label must be >= 0o0 and <= 0o377: 0o400
@@ -47,7 +47,7 @@ BNR(value=89.956055711, resolution=0.043945313)
 
 ### Discrete
 
-```
+```python
 >>> word = arinc429.Word()
 >>> word.label = 0o3
 >>> encoded_mode = arinc429.Discrete(6)
